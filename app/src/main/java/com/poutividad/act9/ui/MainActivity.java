@@ -1,4 +1,4 @@
-package com.poutividad.act9;
+package com.poutividad.act9.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.poutividad.act9.R;
+import com.poutividad.act9.data.EmployeeDao;
 import com.poutividad.act9.model.Employee;
 
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements EmployeeAdapter.O
 
     private EmployeeDao dao;
     private EmployeeAdapter adapter;
-    private List<Employee> employees = new ArrayList<>();
+    private List<Employee> employeeList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +34,8 @@ public class MainActivity extends AppCompatActivity implements EmployeeAdapter.O
 
         RecyclerView rvEmployees = findViewById(R.id.rvEmployees);
         rvEmployees.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new EmployeeAdapter(employees, this);
+        
+        adapter = new EmployeeAdapter(employeeList, this);
         rvEmployees.setAdapter(adapter);
 
         FloatingActionButton fabAdd = findViewById(R.id.fabAdd);
@@ -42,9 +45,10 @@ public class MainActivity extends AppCompatActivity implements EmployeeAdapter.O
     }
 
     private void loadEmployees() {
-        employees.clear();
-        employees.addAll(dao.getAll());
-        adapter.refreshData(employees);
+        List<Employee> updatedList = dao.getAll();
+        employeeList.clear();
+        employeeList.addAll(updatedList);
+        adapter.notifyDataSetChanged();
     }
 
     private void showEmployeeDialog(final Employee employee) {
